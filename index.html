@@ -644,6 +644,17 @@
         cartTotal.innerText = totalMoney;
       }
 
+      function changeQuantity(index, delta) {
+        cart[index].quantity += delta;
+
+        // Если количество стало 0 или меньше — удаляем товар
+        if (cart[index].quantity <= 0) {
+          removeFromCart(index);
+        } else {
+          updateCartUI();
+        }
+      }
+
       function removeFromCart(index) {
         cart.splice(index, 1);
         updateCartUI();
@@ -653,12 +664,14 @@
         if (cart.length === 0) return alert("Корзина пуста");
 
         const phone = "992938550017";
-        let message = "Здравствуйте! Я хочу сделать заказ:\n\n";
+        let message = "🍔 *Новый заказ из Burger House!*\n\n";
+
         cart.forEach((item, i) => {
-          message += `${i + 1}. ${item.name} — ${item.price} с.\n`;
+          message += `• ${item.name} x${item.quantity} = ${item.price * item.quantity} с.\n`;
         });
+
         const total = document.getElementById("cartTotal").innerText;
-        message += `\n*Итого: ${total} сомони*`;
+        message += `\n💰 *Итого: ${total} сомони*`;
 
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
         window.open(url, "_blank");
