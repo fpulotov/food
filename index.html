@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Burger House — Вкуснейшие бургеры в Душанбе</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Montserrat", sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Скрытие скроллбара для табов */
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* Анимация появления карточек */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .menu-card {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+      }
+
+      .menu-card:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .menu-card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .menu-card:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .menu-card:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .menu-card:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .menu-card:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .menu-card:nth-child(7) {
+        animation-delay: 0.35s;
+      }
+      .menu-card:nth-child(8) {
+        animation-delay: 0.4s;
+      }
+
+      /* Hero overlay */
+      .hero-overlay {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.4) 0%,
+          rgba(0, 0, 0, 0.7) 100%
+        );
+      }
+
+      /* Активный таб */
+      .tab-active {
+        background: #f97316 !important;
+        color: white !important;
+      }
+
+      /* Skeleton loader */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #e0e0e0 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      /* Hover эффект для карточек */
+      .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .menu-card {
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-stone-50">
+    <!-- Hero Section -->
+    <section
+      id="hero"
+      class="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      <!-- Background Image -->
+      <div class="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200&q=80"
+          alt="Delicious Burger"
+          class="w-full h-full object-cover"
+        />
+        <div class="hero-overlay absolute inset-0"></div>
+      </div>
+
+      <!-- Content -->
+      <div class="relative z-10 text-center px-6 max-w-2xl mx-auto">
+        <!-- Logo -->
+        <div class="mb-6">
+          <div
+            class="inline-flex items-center justify-center w-24 h-24 bg-orange-500 rounded-full mb-4 shadow-2xl"
+          >
+            <span class="text-4xl">🍔</span>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h1
+          class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight"
+        >
+          Вкуснейшие бургеры в Душанбе
+        </h1>
+
+        <p class="text-lg md:text-xl text-stone-200 mb-8">
+          Свежие ингредиенты • Авторские рецепты • Быстрая подача
+        </p>
+
+        <!-- CTA Button -->
+        <a
+          href="#menu"
+          class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg px-8 py-4 rounded-full transition-all hover:scale-105 shadow-lg"
+        >
+          <span>Смотреть меню</span>
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg
+          class="w-6 h-6 text-white/60"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+          />
+        </svg>
+      </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="bg-white py-8 shadow-sm">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <!-- Address -->
+          <div class="p-4">
+            <div class="text-2xl mb-2">📍</div>
+            <div class="font-semibold text-stone-800">Адрес</div>
+            <div class="text-sm text-stone-500">ул. Рудаки 45</div>
+          </div>
+
+          <!-- Hours -->
+          <div class="p-4">
+            <div class="text-2xl mb-2">🕐</div>
+            <div class="font-semibold text-stone-800">Режим</div>
+            <div class="text-sm text-stone-500">10:00 — 23:00</div>
+          </div>
+
+          <!-- Phone -->
+          <div class="p-4">
+            <a
+              href="tel:+992901234567"
+              class="block hover:text-orange-500 transition-colors"
+            >
+              <div class="text-2xl mb-2">📞</div>
+              <div class="font-semibold text-stone-800">Телефон</div>
+              <div class="text-sm text-stone-500">+992 90 123-45-67</div>
+            </a>
+          </div>
+
+          <!-- WiFi -->
+          <div class="p-4">
+            <div class="text-2xl mb-2">📶</div>
+            <div class="font-semibold text-stone-800">Wi-Fi</div>
+            <div class="text-sm text-stone-500 font-mono">burger2024</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-12 px-4">
+      <div class="max-w-6xl mx-auto">
+        <!-- Section Title -->
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-stone-800 mb-2">
+            Наше меню
+          </h2>
+          <p class="text-stone-500">Выберите категорию или листайте влево</p>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="mb-8 -mx-4 px-4">
+          <div
+            id="categoryTabs"
+            class="flex gap-3 overflow-x-auto hide-scrollbar pb-2"
+          >
+            <!-- Tabs will be inserted here by JS -->
+          </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div
+          id="menuGrid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <!-- Cards will be inserted here by JS -->
+        </div>
+
+        <!-- Loading State -->
+        <div
+          id="loadingState"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <div class="bg-white rounded-2xl overflow-hidden shadow-md">
+            <div class="skeleton h-48 w-full"></div>
+            <div class="p-4">
+              <div class="skeleton h-6 w-3/4 rounded mb-2"></div>
+              <div class="skeleton h-4 w-full rounded mb-3"></div>
+              <div class="skeleton h-8 w-24 rounded ml-auto"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl overflow-hidden shadow-md">
+            <div class="skeleton h-48 w-full"></div>
+            <div class="p-4">
+              <div class="skeleton h-6 w-3/4 rounded mb-2"></div>
+              <div class="skeleton h-4 w-full rounded mb-3"></div>
+              <div class="skeleton h-8 w-24 rounded ml-auto"></div>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-2xl overflow-hidden shadow-md hidden sm:block"
+          >
+            <div class="skeleton h-48 w-full"></div>
+            <div class="p-4">
+              <div class="skeleton h-6 w-3/4 rounded mb-2"></div>
+              <div class="skeleton h-4 w-full rounded mb-3"></div>
+              <div class="skeleton h-8 w-24 rounded ml-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden text-center py-12">
+          <div class="text-4xl mb-4">😕</div>
+          <p class="text-stone-500">
+            Не удалось загрузить меню. Используем демо-данные.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-white py-8 px-4">
+      <div class="max-w-6xl mx-auto text-center">
+        <div class="text-2xl mb-3">🍔</div>
+        <div class="font-bold text-lg mb-2">Burger House</div>
+        <p class="text-stone-400 text-sm mb-4">Вкуснейшие бургеры в Душанбе</p>
+        Б
+        <p class="text-stone-500 text-xs mt-6">
+          © 2026 Burger House. Все права защищены.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const sheetURL =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vSI1hRcRFC0mOSi4485jxJ4-sJiSTko6O15Ozi-wDCk9wTacMQFdnggtF94OFLCCEftUMuA4jSlvEsd/pub?output=csv";
+
+      // ============================================
+      // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+      // ============================================
+      let menuData = [];
+      let activeCategory = "Все";
+
+      // ============================================
+      // CSV ПАРСЕР
+      // ============================================
+      function parseCSV(csvText) {
+        const lines = csvText.trim().split("\n");
+        if (lines.length < 2) return [];
+
+        // Получаем заголовки
+        const headers = parseCSVLine(lines[0]);
+
+        // Парсим строки данных
+        const data = [];
+        for (let i = 1; i < lines.length; i++) {
+          const values = parseCSVLine(lines[i]);
+          if (values.length === headers.length) {
+            const obj = {};
+            headers.forEach((header, index) => {
+              obj[header.trim()] = values[index].trim();
+            });
+            data.push(obj);
+          }
+        }
+
+        return data;
+      }
+
+      // Парсинг одной строки CSV (учитывает кавычки)
+      function parseCSVLine(line) {
+        const result = [];
+        let current = "";
+        let inQuotes = false;
+
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === "," && !inQuotes) {
+            result.push(current);
+            current = "";
+          } else {
+            current += char;
+          }
+        }
+        result.push(current);
+
+        return result;
+      }
+
+      // ============================================
+      // ЗАГРУЗКА ДАННЫХ
+      // ============================================
+      async function loadMenuData() {
+        const loadingState = document.getElementById("loadingState");
+        const errorState = document.getElementById("errorState");
+        const menuGrid = document.getElementById("menuGrid");
+
+        // Показываем состояние загрузки
+        loadingState.classList.remove("hidden");
+        menuGrid.classList.add("hidden");
+        errorState.classList.add("hidden");
+
+        try {
+          // 1. Делаем реальный запрос к Google Таблице
+          const response = await fetch(sheetURL);
+          if (!response.ok) throw new Error("Ошибка при загрузке данных");
+
+          const csvText = await response.text();
+
+          // 2. Парсим CSV и сохраняем в глобальную переменную
+          menuData = parseCSV(csvText);
+
+          // Проверка на пустые данные
+          if (menuData.length === 0) throw new Error("Таблица пуста");
+
+          // Скрываем загрузку и показываем меню
+          loadingState.classList.add("hidden");
+          menuGrid.classList.remove("hidden");
+
+          // 3. Рендерим UI
+          renderCategories();
+          renderMenu();
+        } catch (error) {
+          console.error("Ошибка:", error);
+          loadingState.classList.add("hidden");
+          errorState.classList.remove("hidden");
+
+          // Если не удалось загрузить, используем демо-данные (fallback)
+          menuData = demoData;
+          renderCategories();
+          renderMenu();
+        }
+      }
+
+      // ============================================
+      // РЕНДЕРИНГ КАТЕГОРИЙ
+      // ============================================
+      function renderCategories() {
+        const tabsContainer = document.getElementById("categoryTabs");
+
+        // Получаем уникальные категории
+        const categories = [
+          "Все",
+          ...new Set(menuData.map((item) => item.Category)),
+        ];
+
+        tabsContainer.innerHTML = categories
+          .map(
+            (cat) => `
+                <button 
+                    class="category-tab flex-shrink-0 px-5 py-2.5 rounded-full font-semibold text-sm transition-all
+                           ${cat === activeCategory ? "tab-active" : "bg-white text-stone-600 hover:bg-stone-100 shadow-sm"}"
+                    data-category="${cat}"
+                >
+                    ${cat}
+                </button>
+            `,
+          )
+          .join("");
+
+        // Добавляем обработчики
+        tabsContainer.querySelectorAll(".category-tab").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            activeCategory = btn.dataset.category;
+            renderCategories();
+            renderMenu();
+          });
+        });
+      }
+
+      // ============================================
+      // РЕНДЕРИНГ МЕНЮ
+      // ============================================
+      function renderMenu() {
+        const menuGrid = document.getElementById("menuGrid");
+
+        // Фильтруем данные
+        const filteredData =
+          activeCategory === "Все"
+            ? menuData
+            : menuData.filter((item) => item.Category === activeCategory);
+
+        // Рендерим карточки
+        menuGrid.innerHTML = filteredData
+          .map(
+            (item, index) => `
+                <div class="menu-card bg-white rounded-2xl overflow-hidden shadow-md" style="animation-delay: ${index * 0.05}s">
+                    <div class="relative h-48 overflow-hidden">
+                        <img 
+                            src="${item.ImageURL}" 
+                            alt="${item.Name}"
+                            class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                            loading="lazy"
+                            onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80'"
+                        >
+                        <div class="absolute top-3 left-3">
+                            <span class="bg-white/90 backdrop-blur-sm text-xs font-semibold px-3 py-1 rounded-full text-stone-600">
+                                ${item.Category}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg text-stone-800 mb-1">${item.Name}</h3>
+                        <p class="text-sm text-stone-400 mb-3 line-clamp-2">${item.Ingredients}</p>
+                        <div class="flex items-center justify-end">
+                            <span class="text-2xl font-extrabold text-orange-500">${item.Price} <span class="text-base font-semibold">сомони</span></span>
+                        </div>
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+
+        // Перезапускаем анимации
+        menuGrid.querySelectorAll(".menu-card").forEach((card) => {
+          card.style.animation = "none";
+          card.offsetHeight; // Trigger reflow
+          card.style.animation = null;
+        });
+      }
+
+      // ============================================
+      // ИНИЦИАЛИЗАЦИЯ
+      // ============================================
+      document.addEventListener("DOMContentLoaded", loadMenuData);
+    </script>
+  </body>
+</html>
