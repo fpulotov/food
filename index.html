@@ -117,6 +117,28 @@
           transform 0.3s ease,
           box-shadow 0.3s ease;
       }
+
+      /* Кнопка плавающей корзины */
+      .cart-floating-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 50;
+        box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);
+      }
+
+      /* Боковая панель корзины */
+      #cartDrawer {
+        transition: transform 0.3s ease-in-out;
+        z-index: 100;
+      }
+
+      /* Красивый градиент для цен */
+      .price-tag {
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
     </style>
   </head>
   <body class="bg-stone-50">
@@ -322,6 +344,39 @@
       </div>
     </footer>
 
+    <button
+      onclick="toggleCart()"
+      class="cart-floating-btn bg-orange-500 text-white p-4 rounded-full flex items-center gap-2 hover:scale-105 transition-transform"
+    >
+      <span>🛒</span>
+      <span id="cartCount" class="font-bold">0</span>
+    </button>
+
+    <div
+      id="cartDrawer"
+      class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl transform translate-x-full flex flex-col"
+    >
+      <div class="p-6 border-b flex justify-between items-center bg-stone-50">
+        <h2 class="text-xl font-bold">Ваш заказ</h2>
+        <button onclick="toggleCart()" class="text-2xl">&times;</button>
+      </div>
+      <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+        <p class="text-stone-400 text-center mt-10">Корзина пока пуста</p>
+      </div>
+      <div class="p-6 border-t bg-stone-50">
+        <div class="flex justify-between mb-4 font-bold text-lg">
+          <span>Итого:</span>
+          <span id="cartTotal">0</span><span> с.</span>
+        </div>
+        <button
+          onclick="sendOrder()"
+          class="w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+        >
+          <span>Заказать через WhatsApp</span>
+        </button>
+      </div>
+    </div>
+
     <script>
       const sheetURL =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vSI1hRcRFC0mOSi4485jxJ4-sJiSTko6O15Ozi-wDCk9wTacMQFdnggtF94OFLCCEftUMuA4jSlvEsd/pub?output=csv";
@@ -482,44 +537,27 @@
               item.Status && item.Status.toLowerCase() === "есть";
 
             return `
-                <div class="menu-card bg-white rounded-2xl overflow-hidden shadow-md ${!isAvailable ? "opacity-60 grayscale-[0.5]" : ""}" 
-                     style="animation-delay: ${index * 0.05}s">
-                    <div class="relative h-48 overflow-hidden">
-                        <img 
-                            src="${item.ImageURL}" 
-                            alt="${item.Name}"
-                            class="w-full h-full object-cover ${isAvailable ? "hover:scale-110" : ""} transition-transform duration-500"
-                            loading="lazy"
-                            onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80'"
-                        >
-                        <div class="absolute top-3 left-3 flex gap-2">
-                            <span class="bg-white/90 backdrop-blur-sm text-[10px] font-bold uppercase px-3 py-1 rounded-full text-stone-600 shadow-sm">
-                                ${item.Category}
-                            </span>
-                            ${
-                              !isAvailable
-                                ? `
-                            <span class="bg-red-500 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-sm">
-                                Нет в наличии
-                            </span>
-                            `
-                                : ""
-                            }
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg text-stone-800 mb-1">${item.Name}</h3>
-                        <p class="text-sm text-stone-400 mb-3 line-clamp-2">${item.Ingredients}</p>
-                        <div class="flex items-center justify-end">
-                            ${
-                              isAvailable
-                                ? `<span class="text-2xl font-extrabold text-orange-500">${item.Price} <span class="text-base font-semibold">сомони</span></span>`
-                                : `<span class="text-sm font-bold text-stone-400 italic">Скоро будет</span>`
-                            }
-                        </div>
-                    </div>
-                </div>
-            `;
+<div class="menu-card bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 ${!isAvailable ? "opacity-60 grayscale-[0.5]" : ""}">
+    <div class="relative h-56 overflow-hidden">
+        <img src="${item.ImageURL}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
+        <div class="absolute top-4 left-4">
+            <span class="bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase px-3 py-1 rounded-full text-stone-700 shadow-sm">${item.Category}</span>
+        </div>
+    </div>
+    <div class="p-5">
+        <h3 class="font-bold text-xl text-stone-800 mb-1">${item.Name}</h3>
+        <p class="text-sm text-stone-500 mb-4 h-10 line-clamp-2">${item.Ingredients}</p>
+        <div class="flex items-center justify-between">
+            <span class="text-2xl font-black text-orange-500">${item.Price} <small class="text-sm">с.</small></span>
+            ${
+              isAvailable
+                ? `<button onclick="addToCart('${item.Name}', ${item.Price})" class="bg-stone-900 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-orange-500 transition-colors">В корзину</button>`
+                : `<span class="text-xs font-bold text-stone-400 uppercase">Нет в наличии</span>`
+            }
+        </div>
+    </div>
+</div>
+`;
           })
           .join("");
 
@@ -534,6 +572,73 @@
       // ИНИЦИАЛИЗАЦИЯ
       // ============================================
       document.addEventListener("DOMContentLoaded", loadMenuData);
+      let cart = [];
+
+      function toggleCart() {
+        const drawer = document.getElementById("cartDrawer");
+        drawer.classList.toggle("translate-x-full");
+      }
+
+      function addToCart(name, price) {
+        cart.push({ name, price });
+        updateCartUI();
+        // Эффект тряски корзины при добавлении
+        const btn = document.querySelector(".cart-floating-btn");
+        btn.classList.add("animate-bounce");
+        setTimeout(() => btn.classList.remove("animate-bounce"), 500);
+      }
+
+      function updateCartUI() {
+        const cartItems = document.getElementById("cartItems");
+        const cartCount = document.getElementById("cartCount");
+        const cartTotal = document.getElementById("cartTotal");
+
+        cartCount.innerText = cart.length;
+
+        if (cart.length === 0) {
+          cartItems.innerHTML =
+            '<p class="text-stone-400 text-center mt-10">Корзина пока пуста</p>';
+          cartTotal.innerText = 0;
+          return;
+        }
+
+        cartItems.innerHTML = cart
+          .map(
+            (item, index) => `
+        <div class="flex justify-between items-center mb-4 pb-4 border-b">
+            <div>
+                <div class="font-bold text-stone-800">${item.name}</div>
+                <div class="text-orange-500 font-bold">${item.price} с.</div>
+            </div>
+            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600">Удалить</button>
+        </div>
+    `,
+          )
+          .join("");
+
+        const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+        cartTotal.innerText = total;
+      }
+
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+      }
+
+      function sendOrder() {
+        if (cart.length === 0) return alert("Корзина пуста");
+
+        const phone = "992938550017";
+        let message = "Здравствуйте! Я хочу сделать заказ:\n\n";
+        cart.forEach((item, i) => {
+          message += `${i + 1}. ${item.name} — ${item.price} с.\n`;
+        });
+        const total = document.getElementById("cartTotal").innerText;
+        message += `\n*Итого: ${total} сомони*`;
+
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        window.open(url, "_blank");
+      }
     </script>
   </body>
 </html>
