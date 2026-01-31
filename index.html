@@ -580,9 +580,20 @@
       }
 
       function addToCart(name, price) {
-        cart.push({ name, price });
+        // Ищем, есть ли уже такой товар в корзине
+        const existingItem = cart.find((item) => item.name === name);
+
+        if (existingItem) {
+          // Если есть, просто увеличиваем количество
+          existingItem.quantity += 1;
+        } else {
+          // Если нет, добавляем как новый объект с количеством 1
+          cart.push({ name, price: Number(price), quantity: 1 });
+        }
+
         updateCartUI();
-        // Эффект тряски корзины при добавлении
+
+        // Эффект анимации кнопки
         const btn = document.querySelector(".cart-floating-btn");
         btn.classList.add("animate-bounce");
         setTimeout(() => btn.classList.remove("animate-bounce"), 500);
